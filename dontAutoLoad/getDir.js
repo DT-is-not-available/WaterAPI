@@ -14,8 +14,3 @@ Water.getId = () => {
 	if (index == -1) index = path.length - 1
 	return path[index]
 }
-
-Water.getPath = () => {
-	if (document.currentScript) return (document.currentScript.src+"/").replace("file:///","").replace("%20"," ").split("/")
-	else err("currentScriptNull")
-}

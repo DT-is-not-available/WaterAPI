@@ -1,16 +1,36 @@
 const fs = require('fs')
 
-let page = 1
+$.page = 1
 let restartRequired = false
 
-Water.gui.addMenuButton("- Installed Mods -",()=>{
-	page = 1
-	waterMods()
+Water.gui.addMenuButton(`- ${common_Localize.lo("manage_mods")} -`,()=>{
+	$.page = 1
+	$.waterMods()
 }, "- Steam Workshop -")
 
-function waterMods() {
+extend("gui_GameMenu.create", ()=>{
+	Water.gui.addButton(common_Localize.lo("manage_mods"), ()=>{
+		Water.$.page = 1
+		Water.$.waterMods()
+	}, {
+		fillWidth: true,
+		centerText: true,
+	})
+},`	gui.windowAddBottomButtons([{ text : common_Localize.lo("back_to_title"), action : function() {`)
+
+extend("gui_MoreSettingsWindow.create", ()=>{
+	waterButton = new gui_TextButton(gui,stage,thisWindow,doConfirmLanguage,"Water "+common_Localize.lo("advanced_settings"));
+	thisWindow.addChild(waterButton);
+	thisWindow.addChild(new gui_GUISpacing(thisWindow,new common_Point(2,4)));
+}, "	var slider1 = new gui_Slider(gui,stage,thisWindow,function() {")
+
+extend("gui_MoreSettingsWindow.create", ()=>{
+	waterButton.fillWidth()
+}, "if(languageButton != null) {")
+
+$.waterMods = function() {
 	Water.gui.createWindow(false, "Please wait...")
-	getInstalledMods(page, mods=>{
+	getInstalledMods($.page, mods=>{
 		try {
 			console.log(mods)
 			Water.gui.closeWindow()
@@ -55,8 +75,8 @@ ${modConf.description}`,
 										Water.gui.createWindow(false, "Please wait...")
 										greenworks.ugcUnsubscribe(mod.publishedFileId, ()=>{
 											restartRequired = true
-											Water.gui.closeAllWindows()
-											waterMods()	
+											Water.gui.closeWindow(3)
+											$.waterMods()	
 										})
 									}
 								}])
@@ -66,25 +86,25 @@ ${modConf.description}`,
 					fillWidth: true,
 				})
 			}
-			win.push(`Page ${page}`)
+			win.push(`Page ${$.page}`)
 			let bottomButtons = []
-			if (page > 1) bottomButtons.push({
+			if ($.page > 1) bottomButtons.push({
 				text: "Prev",
 				action: ()=>{
 					Water.gui.closeWindow()
-					page--
-					waterMods()
+					$.page--
+					$.waterMods()
 				}
 			})
 			if (mods.length > 0) bottomButtons.push({
 				text: "Next",
 				action: ()=>{
 					Water.gui.closeWindow()
-					page++
-					waterMods()
+					$.page++
+					$.waterMods()
 				}
 			})
-			Water.gui.createWindow("Installed Mods", win, bottomButtons)
+			Water.gui.createWindow(common_Localize.lo("manage_mods"), win, bottomButtons)
 			
 		} catch (e) {
 			Water.gui.closeWindow()

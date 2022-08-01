@@ -48,7 +48,7 @@ function waterErr(id, dispid = false) {
 	}
 }
 
-if (window['debugger api']) window["debugger api"]().scope.share(`Water ${MAJOR}.${MINOR}.${PATCH}`)
+window["debugger api"]().scope.share(`Water ${MAJOR}.${MINOR}.${PATCH}`)
 
 // easily accessible version number
 Water.version = MAJOR + "." + MINOR + "." + PATCH
@@ -148,7 +148,9 @@ Water.include("gui.js", {
 Water.include("throw.js")
 
 // include better mods menu
-Water.include("optionalModules/betterModsMenu.js")
+Water.include("optionalModules/betterModsMenu.js", {
+	$: $
+})
 Water.include("optionalModules/reloadHook.js")
 
 Water.id = Water.getId()

@@ -86,9 +86,11 @@ Water.gui.createWindow = (title, content, bottomButtons) => {
 					gui.windowInner.addChild(new gui_GUISpacing(gui.windowInner,new common_Point(2,4)))
 				} else if (el.type == "button") {
 					let button = new gui_ContainerButton(gui,gui.innerWindowStage,gui.windowInner,el.onClick || (()=>{}), el.isActive || (()=>false), el.onHover || (()=>{}))
-					button.container.addChild(new gui_TextElement(button,gui.innerWindowStage,el.text,el.textUpdateFunction,el.font))
-					button.container.padding = { left: 3, right: 3, top: 3, bottom: -1 }
+					let text = new gui_TextElement(button,gui.innerWindowStage,el.text,el.textUpdateFunction,el.font)
+					button.container.addChild(text)
+					button.container.padding = { left: 3, right: 3, top: 3, bottom: 0 }
 					if (el.fillWidth) button.container.fillSecondarySize = true
+					if (el.centerText) text.setText(el.text)
 					button.container.updateSize()
 					gui.windowInner.addChild(button)
 					gui.windowInner.addChild(new gui_GUISpacing(gui.windowInner,new common_Point(2,4)))
@@ -98,6 +100,20 @@ Water.gui.createWindow = (title, content, bottomButtons) => {
 	}
 	if (typeof bottomButtons == "object") gui.windowAddBottomButtons(bottomButtons)
 	else if (bottomButtons) gui.windowAddBottomButtons()
+}
+
+// addButton
+Water.gui.addButton = (text, onClick, options={}) => {
+	let gui = Water.game.state.gui
+	let button = new gui_ContainerButton(gui,gui.innerWindowStage,gui.windowInner,onClick || (()=>{}), options.isActive || (()=>false), options.onHover || (()=>{}))
+	let textelem
+	button.container.addChild(textelem = new gui_TextElement(button,gui.innerWindowStage,text,options.textUpdateFunction,options.font))
+	button.container.padding = { left: 3, right: 3, top: 3, bottom: 0 }
+	if (options.fillWidth) button.container.fillSecondarySize = true
+	if (options.centerText) textelem.setText(text)
+	button.container.updateSize()
+	gui.windowInner.addChild(button)
+	gui.windowInner.addChild(new gui_GUISpacing(gui.windowInner,new common_Point(2,4)))
 }
 
 $.w_mainMenu_addButton = (text, onClick, index=0, options={})=>{

@@ -47,6 +47,7 @@ function waterErr(id, dispid = false) {
 		throw err
 	}
 }
+Water.time = 0
 
 window["debugger api"]().scope.share(`Water ${MAJOR}.${MINOR}.${PATCH}`)
 
@@ -138,20 +139,33 @@ ModTools.onModsLoaded(function(_game) {
 	console.log("Water version: " + Water.version)
 })
 
+ModTools.onCityUpdate(function(_city, _dt) {
+	Water.time += _dt
+})
+
+ModTools.onLoadStart(function() {
+	Water.time = 0
+})
+
 // include all api files
 Water.include("getDir.js")
 Water.include("extend.js")
-Water.include("scope.js")
 Water.include("gui.js", {
 	$: $
+})
+Water.include("settings.js", {
+	$: $
+})
+if (Water.settings.experimentalAPI_scope) Water.include("scope.js", {
+	_scopes: _scopes
 })
 Water.include("throw.js")
 
 // include better mods menu
-Water.include("optionalModules/betterModsMenu.js", {
+if (Water.settings.betterModsMenu) Water.include("optionalModules/betterModsMenu.js", {
 	$: $
 })
-Water.include("optionalModules/reloadHook.js")
+if (Water.settings.restartOnReload) Water.include("optionalModules/reloadHook.js")
 
 Water.id = Water.getId()
 

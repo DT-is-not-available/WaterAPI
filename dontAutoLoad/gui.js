@@ -29,7 +29,6 @@ Water.gui.addMenuButton = (text, onClick, index=0, options={}) => {
 	if (index < 0) {
 		index = waterButtonNames.length-1
 	}
-	console.log(index)
 	$.waterButtons.push({
 		text: text,
 		onClick: onClick,
@@ -48,7 +47,7 @@ Water.gui.closeAllWindows = () => {
 	Water.game.state.gui.closeWindow()
 }
 
-Water.gui.createWindow = (title, content, bottomButtons) => {
+Water.gui.createWindow = (title, content, bottomButtons=null, closeText="Close", closeAction=null) => {
 	let gui = Water.game.state.gui
 	gui.createWindow()
 	gui.addWindowToStack(()=>{
@@ -90,7 +89,6 @@ Water.gui.createWindow = (title, content, bottomButtons) => {
 					button.container.addChild(text)
 					button.container.padding = { left: 3, right: 3, top: 3, bottom: 0 }
 					if (el.fillWidth) button.container.fillSecondarySize = true
-					if (el.centerText) text.setText(el.text)
 					button.container.updateSize()
 					gui.windowInner.addChild(button)
 					gui.windowInner.addChild(new gui_GUISpacing(gui.windowInner,new common_Point(2,4)))
@@ -98,7 +96,7 @@ Water.gui.createWindow = (title, content, bottomButtons) => {
 			}
 		}
 	}
-	if (typeof bottomButtons == "object") gui.windowAddBottomButtons(bottomButtons)
+	if (typeof bottomButtons == "object") gui.windowAddBottomButtons(bottomButtons, closeText, closeAction)
 	else if (bottomButtons) gui.windowAddBottomButtons()
 }
 
@@ -110,7 +108,6 @@ Water.gui.addButton = (text, onClick, options={}) => {
 	button.container.addChild(textelem = new gui_TextElement(button,gui.innerWindowStage,text,options.textUpdateFunction,options.font))
 	button.container.padding = { left: 3, right: 3, top: 3, bottom: 0 }
 	if (options.fillWidth) button.container.fillSecondarySize = true
-	if (options.centerText) textelem.setText(text)
 	button.container.updateSize()
 	gui.windowInner.addChild(button)
 	gui.windowInner.addChild(new gui_GUISpacing(gui.windowInner,new common_Point(2,4)))

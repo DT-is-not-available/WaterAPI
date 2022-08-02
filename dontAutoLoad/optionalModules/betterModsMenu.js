@@ -18,21 +18,10 @@ extend("gui_GameMenu.create", ()=>{
 	})
 },`	gui.windowAddBottomButtons([{ text : common_Localize.lo("back_to_title"), action : function() {`)
 
-extend("gui_MoreSettingsWindow.create", ()=>{
-	waterButton = new gui_TextButton(gui,stage,thisWindow,doConfirmLanguage,"Water "+common_Localize.lo("advanced_settings"));
-	thisWindow.addChild(waterButton);
-	thisWindow.addChild(new gui_GUISpacing(thisWindow,new common_Point(2,4)));
-}, "	var slider1 = new gui_Slider(gui,stage,thisWindow,function() {")
-
-extend("gui_MoreSettingsWindow.create", ()=>{
-	waterButton.fillWidth()
-}, "if(languageButton != null) {")
-
 $.waterMods = function() {
 	Water.gui.createWindow(false, "Please wait...")
 	getInstalledMods($.page, mods=>{
 		try {
-			console.log(mods)
 			Water.gui.closeWindow()
 			let win = [
 				"Select mods below to configure them",
@@ -47,6 +36,8 @@ $.waterMods = function() {
 					}
 				})
 			}
+			if (mods.length == 0 && $.page == 1) win.push("No mods installed, go to Steam Workshop to install some!")
+			if (mods.length == 0 && $.page > 1) win.push("You have reached the end of the list.")
 			for (let i = 0; i < mods.length; i++) {
 				let mod = mods[i]
 				let modConf = {
@@ -64,7 +55,7 @@ ${modConf.description}`,
 						], [{
 							text: "Settings",
 							action: ()=>{
-								// settings
+								Water.gui.createWindow(modConf.name, "Settings are not yet implemented", true)
 							}
 						},{
 							text: "Uninstall",

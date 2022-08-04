@@ -9,7 +9,7 @@ Water.Timeline = class {
 		let time = this.time+timeUntil
 		
 		let start = this.#events[0]
-		let end = this.#events[this.#events.length-1]// python superior here (events[-1])
+		let end = this.#events[this.#events.length-1]
 		// past largest value
 		if (this.#events.length == 0 || time >= end.time)
 			return this.#events[this.#events.push({

@@ -12,51 +12,78 @@ let waterDefaults = {
 	betterModsMenu: true,
 	restartOnReload: true,
 }
-Water.settings = localStorage.getItem("WaterSettings") ? JSON.parse(localStorage.getItem("WaterSettings")) : waterDefaults
 
 Water.$.waterSettings = function() {
-	Water.settings = localStorage.getItem("WaterSettings") ? JSON.parse(localStorage.getItem("WaterSettings")) : waterDefaults
+	settings = localStorage.getItem("WaterSettings") ? JSON.parse(localStorage.getItem("WaterSettings")) : waterDefaults
 	Water.gui.createWindow("Water Settings", [
-		"Most settings will not take effect until the next restart. You can restart now by clicking 'Apply' to save settings and reload the game.\n",
+		"[red]Most settings will not take effect until the next restart.",
+		"You can restart now by clicking 'Apply' to save settings and reload the game.\n",
 		"Special settings for Water's UI and behavior",
 		{
 			type: "checkbox",
 			text: "Better mods menu",
 			onClick: ()=>{
-				Water.settings.betterModsMenu = !Water.settings.betterModsMenu
-				localStorage.setItem("WaterSettings", JSON.stringify(Water.settings))
+				settings.betterModsMenu = !settings.betterModsMenu
+				localStorage.setItem("WaterSettings", JSON.stringify(settings))
 			},
-			isChecked: ()=>Water.settings.betterModsMenu,
+			isChecked: ()=>settings.betterModsMenu,
 		},
 		{
 			type: "checkbox",
 			text: "Completely restart on reload",
 			onClick: ()=>{
-				Water.settings.restartOnReload = !Water.settings.restartOnReload
-				localStorage.setItem("WaterSettings", JSON.stringify(Water.settings))
+				settings.restartOnReload = !settings.restartOnReload
+				localStorage.setItem("WaterSettings", JSON.stringify(settings))
 			},
-			isChecked: ()=>Water.settings.restartOnReload,
+			isChecked: ()=>settings.restartOnReload,
+		},
+		{
+			type: "checkbox",
+			text: "Show errors in popups",
+			onClick: ()=>{
+				settings.showErrors = !settings.showErrors
+				localStorage.setItem("WaterSettings", JSON.stringify(settings))
+			},
+			isChecked: ()=>settings.showErrors,
 		},
 		"Settings for experimental API features",
 		{
 			type: "checkbox",
-			text: "Scopes API",
+			text: "Experimental Scopes API",
 			onClick: ()=>{
-				Water.settings.experimentalAPI_scope = !Water.settings.experimentalAPI_scope
-				localStorage.setItem("WaterSettings", JSON.stringify(Water.settings))
+				settings.experimentalAPI_scope = !settings.experimentalAPI_scope
+				localStorage.setItem("WaterSettings", JSON.stringify(settings))
 			},
-			isChecked: ()=>Water.settings.experimentalAPI_scope,
+			isChecked: ()=>settings.experimentalAPI_scope,
 		},
+		/*/{
+			type: "checkbox",
+			text: "Experimental GUI functions",
+			onClick: ()=>{
+				settings.experimentalAPI_gui = !settings.experimentalAPI_gui
+				localStorage.setItem("WaterSettings", JSON.stringify(settings))
+			},
+			isChecked: ()=>settings.experimentalAPI_gui,
+		},/**/
+		{
+			type: "checkbox",
+			text: "Experimental Timeline API",
+			onClick: ()=>{
+				settings.experimentalAPI_timeline = !settings.experimentalAPI_timeline
+				localStorage.setItem("WaterSettings", JSON.stringify(settings))
+			},
+			isChecked: ()=>settings.experimentalAPI_timeline,
+		}
 	], [
 		{
 			text: "Reset",
 			action: ()=>{
-				Water.gui.createWindow("Reset Defaults", "Are you sure you want to reset all settings to their default values?", [
+				Water.gui.createWindow("Reset Defaults", "[red]Are you sure you want to reset all settings to their default values?", [
 					{
 						text: "Yes",
 						action: ()=>{
-							Water.settings = waterDefaults
-							localStorage.setItem("WaterSettings", JSON.stringify(Water.settings))
+							settings = waterDefaults
+							localStorage.setItem("WaterSettings", JSON.stringify(settings))
 							Water.gui.closeWindow()
 						}
 					}

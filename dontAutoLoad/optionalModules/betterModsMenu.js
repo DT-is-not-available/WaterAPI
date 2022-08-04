@@ -60,7 +60,7 @@ ${modConf.description}`,
 						},{
 							text: "Uninstall",
 							action: ()=>{
-								Water.gui.createWindow("Are you sure?", "Are you sure you want to uninstall this mod?\nYou will have to reinstall it through the steam workshop.", [{
+								Water.gui.createWindow("Are you sure?", ["[red]Are you sure you want to uninstall this mod?","You will have to reinstall it through the steam workshop."], [{
 									text: "I am sure",
 									action: ()=>{
 										Water.gui.createWindow(false, "Please wait...")

@@ -10,7 +10,7 @@ let waterButtonNames = [
 Water.extend("MainMenu", () => {
 	try {
 		Water.$.mainMenu = _gthis
-		Water.emit("mainMenuCreated", _gthis)
+		Water.emit("mainMenu", _gthis)
 		let waterButtons = Water.$.waterButtons
 		let addButton = Water.$.w_mainMenu_addButton
 		for (let i = 0; i < waterButtons.length; i++) {

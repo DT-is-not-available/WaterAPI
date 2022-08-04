@@ -26,7 +26,22 @@ function _getIndexOf(string, subString, index) {
 	return arr.join(subString).length - 1;
 }
 
+$.__WATERERRORS = []
+$.__WATERERRORS.throw = function(errno, e) {
+	// get error message and first line of stack from e
+	let message = e.message
+	let stacktop = e.stack.split("\n")[0]
+	// set errno error message and first line of stack
+	$.__WATERERRORS[errno].message = message
+	let stack = $.__WATERERRORS[errno].stack.split("\n")
+	stack[0] = stacktop
+	$.__WATERERRORS[errno].stack = stack.join("\n")
+	// finally throw
+	throw $.__WATERERRORS[errno]
+}
+
 Water.merge = function(origFunc, newFunc, section = null, replace = false, index = 0) {
+	let errno = $.__WATERERRORS.push(new Error())-1
 	if (typeof origFunc != "function") {
 		throw new Error("Water.extend: first argument must be a valid function")
 	}
@@ -35,7 +50,14 @@ Water.merge = function(origFunc, newFunc, section = null, replace = false, index
 	}
 
 	let origCode = _getInnerCode(origFunc.toString())
-	let newCode = "\n/* extension */\n" + _getInnerCode(newFunc.toString()) + "\n/* end */\n"
+	let newCode = 
+	"\n/* extension */\n" + 
+	"try {\n" +
+	_getInnerCode(newFunc.toString()) + 
+	"\n} catch (e) {\n" +
+	"	Water.$.__WATERERRORS.throw(" + errno + ", e);\n" +
+	"}\n" +
+	"\n/* end */\n"
 
 	let pos
 	let endpos

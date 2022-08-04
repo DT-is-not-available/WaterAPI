@@ -16,7 +16,10 @@
 	- [closeAllWindows](gui.md#Water.gui.closeAllWindows)
 	- [closeWindow](gui.md#Water.gui.closeWindow)
 	- [createWindow](gui.md#Water.gui.createWindow)
-
+- [Timeline](Timeline.md)
+	- [schedule](Timeline.md#Timeline.schedule)
+	- [advance](Timeline.md#Timeline.advance)
+	- [cancel](Timeline.md#Timeline.cancel)
 
 ## Water.game
 A reference to the game variable

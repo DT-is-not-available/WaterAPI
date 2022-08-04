@@ -3,6 +3,20 @@
 const { EventEmitter } = require("events")
 window.Water = new EventEmitter()
 
+// error simplifier
+function remIrrErrInfo (str) {
+	str = str.toString()
+	try {
+		let lines = str.split("\n")
+		lines.forEach((line, i) => {
+			lines[i] = line.replace(/chrome\-extension:\/\/\w+\/game\/js\//g, "").replace(/file\:\/\/\//g,"").replace(/%20/g, " ").replace(/C\:\/Users\/\w+\//g,"").replace(/AppData\/Local\/the-final-earth-2\/User Data\/Default\//g, "")
+		})
+		return lines.join("\n")
+	} catch (e) {
+		alert (typeof str) 
+	}
+}
+
 // local storage Water key
 
 // version
@@ -27,14 +41,14 @@ Water.$ = $
 
 let messages = {
 	globalShare: "Sharing your scope globally can be dangerous, as you are giving any mod control over your scope. It is recommended that you do not share your scope globally, unless you know what you are doing.",
-	scopeShare: "By sharing your scope, you are giving another mod control over all variables in your scope. This can be dangerous, and is not recommended with mods you don't trust.",
+	scopeShare: "By sharing your scope, you are giving another mod control over all variables in your scope. This can be dangerous, and is not recommended with mods you don't trust. You can add true as the third parameter of this function to ignore this warning completely.",
 	currentScriptNull: "This function can only be used during the initialization of the script. If you are trying to use this function in a callback, instead save it's value to a variable and reuse it later.",
 	onlyInScript: "This function can only be used inside of a script.",
 }
-function waterWarn(id) {
+function waterWarn(id, dispid = false) {
 	if (messages[id]) {
-		let modid = Water.getId ? Water.getId() : "Water"
-		console.warn(`Warning: [${modid == Water.id ? "Water" : modid}] ${err.message}`)
+		let modid = dispid ? dispid : Water.getId ? Water.getId() : "Water"
+		console.warn(`Warning: [${modid == Water.id ? "Water" : modid}] ${messages[id]}`)
 	}
 }
 function waterErr(id, dispid = false) {
@@ -48,8 +62,6 @@ function waterErr(id, dispid = false) {
 	}
 }
 Water.time = 0
-
-window["debugger api"]().scope.share(`Water ${MAJOR}.${MINOR}.${PATCH}`)
 
 // easily accessible version number
 Water.version = MAJOR + "." + MINOR + "." + PATCH
@@ -89,7 +101,7 @@ Water.include = (filename, vars={}) => {
 	if (index == -1) index = path.indexOf("1180130") + 1
 	if (index == -1) index = path.length - 1
 	path.length = index + 1
-	let dir = path.join("/") + "/dontAutoLoad/" + filename
+	let dir = path.join("/") + "/" + filename
 	let file
 	try {
 		file = fs.readFileSync(dir).toString()
@@ -148,24 +160,37 @@ ModTools.onLoadStart(function() {
 })
 
 // include all api files
-Water.include("getDir.js")
-Water.include("extend.js")
-Water.include("gui.js", {
-	$: $
-})
-Water.include("settings.js", {
-	$: $
-})
-if (Water.settings.experimentalAPI_scope) Water.include("scope.js", {
+let settings = localStorage.getItem("WaterSettings") ? JSON.parse(localStorage.getItem("WaterSettings")) : waterDefaults
+let waterIncludes = {
+	$: $,
+	settings: settings,
+	waterWarn: waterWarn,
+	waterErr: waterErr,
 	_scopes: _scopes
-})
-Water.include("throw.js")
+}
+Water.include("dontAutoLoad/getDir.js", waterIncludes)
+Water.include("dontAutoLoad/extend.js", waterIncludes)
+Water.include("dontAutoLoad/settings.js", waterIncludes)
+Water.include("dontAutoLoad/gui.js", waterIncludes)
+if (settings.experimentalAPI_scope) Water.include("dontAutoLoad/scope.js", waterIncludes)
+if (settings.experimentalAPI_timeline) Water.include("dontAutoLoad/timeline.js", waterIncludes)
 
 // include better mods menu
-if (Water.settings.betterModsMenu) Water.include("optionalModules/betterModsMenu.js", {
-	$: $
-})
-if (Water.settings.restartOnReload) Water.include("optionalModules/reloadHook.js")
+if (settings.betterModsMenu) Water.include("dontAutoLoad/optionalModules/betterModsMenu.js", waterIncludes)
+if (settings.restartOnReload) Water.include("dontAutoLoad/optionalModules/reloadHook.js", waterIncludes)
+
+if (settings.showErrors) window.onerror = function(msg, url, line, col, error) {
+	let stack = remIrrErrInfo(error.stack)
+	try {
+		Water.gui.createWindow("Error: "+msg, [`At ${remIrrErrInfo(url)}:${line}:${col}\n`, `[red]${stack}`], false)
+	} catch (e) {
+		alert(`Error: ${msg}
+At ${remIrrErrInfo(url)}:${line}:${col}
+
+${stack}`)
+	}
+}
+if (settings.showErrors) window["debugger api"]().errmsg = false
 
 Water.id = Water.getId()
 

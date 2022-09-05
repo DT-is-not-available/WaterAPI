@@ -1,4 +1,7 @@
 # Water.Timeline
+### Experimental API
+This API must be enabled in the experimental API section of Waterworks' settings. Things here can change at any time, and are not solidified.
+
 Water's built-in timeline system for scheduled events. Can be used for optimization purposes or scheduling events within the game. Time for timelines is not automatically synced up with the game time.
 ```js
 let Timeline = new Water.Timeline()

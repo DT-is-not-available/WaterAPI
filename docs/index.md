@@ -37,7 +37,7 @@ Water.extend(funcName, newFunction, ?section, ?replace, ?index)
 Inserts, modifies, or removes code from any function
 
 ### `funcName`
-The name of the function to modify. Must be a string, NOT a function.
+The name of the function to modify. Must be a string, NOT a function. This parameter is evaluated to modify the desired function. To avoid a call to `eval()`, use [merge](#Water.merge) instead.
 
 ### `newFunction`
 The new function to insert.

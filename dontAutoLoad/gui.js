@@ -51,7 +51,7 @@ Water.gui.createWindow = (title, content, bottomButtons=null, closeText="Close",
 	let gui = Water.game.state.gui
 	gui.createWindow()
 	gui.addWindowToStack(()=>{
-		Water.gui.createWindow(title, content, bottomButtons)
+		Water.gui.createWindow(title, content, bottomButtons, closeText, closeAction)
 	})
 	if (title) gui.windowAddTitleText(title)
 	if (content) if (typeof content != "object") {
@@ -133,4 +133,38 @@ $.w_mainMenu_addButton = (text, onClick, index=0, options={})=>{
 	state.bottomButtonOnRight.set(bottomButton, o.upperCorner)
 	state.bottomButtonAttract.set(bottomButton, false)
 	return bottomButton
+}
+
+if (settings.experimentalAPI_gui) {
+
+function Body() {
+	let body = []
+	body.addText = (text, options={}) => {
+		let elem = text.toString()
+		elem.type = "text"
+		// text,textUpdateFunction,font,padding,maxWidth,neverDecreaseSize,fixedSizeForLang
+		elem.font = options.font || "Arial16"
+		elem.textUpdateFunction = options.textUpdateFunction || (()=>text)
+		elem.padding = options.padding || { left: 0, right: 0, top: 0, bottom: 0 }
+		elem.maxWidth = options.maxWidth || null
+		elem.neverDecreaseSize = options.neverDecreaseSize || false
+		elem.fixedSizeForLang = options.fixedSizeForLang || false
+		body.push(elem)
+		return elem
+	}
+	return body
+}
+
+Water.gui.Window = class {
+	constructor(title) {
+		this.title = title || false
+		this.text = null
+		this.body = Body()
+		this.bottomButtons = true
+	}
+	show() {
+		createWindow(this.title, this.text, this.bottomButtons)
+	}
+}
+
 }

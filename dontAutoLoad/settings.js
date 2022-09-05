@@ -1,5 +1,5 @@
 extend("gui_MoreSettingsWindow.create", ()=>{
-	waterButton = new gui_TextButton(gui,stage,thisWindow,Water.$.waterSettings,"Water Settings");
+	waterButton = new gui_TextButton(gui,stage,thisWindow,Water.$.waterSettings,"Waterworks Settings");
 	thisWindow.addChild(waterButton);
 	thisWindow.addChild(new gui_GUISpacing(thisWindow,new common_Point(2,4)));
 }, "	var slider1 = new gui_Slider(gui,stage,thisWindow,function() {")
@@ -15,10 +15,10 @@ let waterDefaults = {
 
 Water.$.waterSettings = function() {
 	settings = localStorage.getItem("WaterSettings") ? JSON.parse(localStorage.getItem("WaterSettings")) : waterDefaults
-	Water.gui.createWindow("Water Settings", [
+	Water.gui.createWindow("Waterworks Settings", [
 		"[red]Most settings will not take effect until the next restart.",
 		"You can restart now by clicking 'Apply' to save settings and reload the game.\n",
-		"Special settings for Water's UI and behavior",
+		"Special settings for Waterworks's UI and behavior",
 		{
 			type: "checkbox",
 			text: "Better mods menu",
@@ -46,7 +46,7 @@ Water.$.waterSettings = function() {
 			},
 			isChecked: ()=>settings.showErrors,
 		},
-		"Settings for experimental API features",
+		"Settings for Waterworks API experiments",
 		{
 			type: "checkbox",
 			text: "Experimental Scopes API",
@@ -56,7 +56,7 @@ Water.$.waterSettings = function() {
 			},
 			isChecked: ()=>settings.experimentalAPI_scope,
 		},
-		/*/{
+		{
 			type: "checkbox",
 			text: "Experimental GUI functions",
 			onClick: ()=>{
@@ -64,7 +64,7 @@ Water.$.waterSettings = function() {
 				localStorage.setItem("WaterSettings", JSON.stringify(settings))
 			},
 			isChecked: ()=>settings.experimentalAPI_gui,
-		},/**/
+		},
 		{
 			type: "checkbox",
 			text: "Experimental Timeline API",

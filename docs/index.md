@@ -1,4 +1,7 @@
 # Water API
+## Warning!
+Due to the way that mod loading works within The Final Earth 2, the API may not immediately work for you. If any of the API elements fail to work in the outer layer of your .js file, try placing it within the callback for `ModTools.onModsLoaded`. Hopefully this issue can be resolved in the future.
+	
 - [game](#Water.game)
 - [city](#Water.city)
 - [time](#Water.time)

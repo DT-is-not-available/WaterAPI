@@ -1,4 +1,4 @@
-# Water
+# Water API
 - [game](#Water.game)
 - [city](#Water.city)
 - [time](#Water.time)

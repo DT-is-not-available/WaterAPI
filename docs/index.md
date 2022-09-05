@@ -10,6 +10,7 @@
 - [getId](#Water.getId)
 - [steamMods](#Water.steamMods)
 - [version](#Water.version)
+- [on](#Water.on)
 - [gui](gui.md)
 	- [addButton](gui.md#Water.gui.addButton)
 	- [addMenuButton](gui.md#Water.gui.addMenuButton)
@@ -107,3 +108,7 @@ A path to the folder containing workshop mods
 
 ## Water.version
 A variable containing the version name
+
+## Water.on
+Listen for a water event. Here is a list of currently supported ones:
+- `mainMenu` - fires when the game loads the main menu
